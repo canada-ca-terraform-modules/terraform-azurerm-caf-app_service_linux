@@ -1,10 +1,21 @@
 appServiceLinux = {
   test = {
-    resource_group              = "Project"
-    https_only                  = true
-    enabled                     = true
-    client_certificated_enabled = false
-    client_certificate_mode     = "Required"
+    resource_group                                 = "Project"
+    enabled                                        = true
+    https_only                                     = true
+    public_network_access_enabled                  = false
+    # client_affinity_enabled                        = true
+    # client_certificated_enabled                    = false
+    # client_certificate_mode                        = "Required"
+    # client_certificate_exclusion_paths             = ["/path1", "/path2"]
+    # ftp_publish_basic_authentication_enabled       = true
+    # key_vault_reference_identity_id                = "Your Key Vault Identity ID"
+    # virtual_network_subnet_id                      = "Your VNet Subnet ID"
+    # webdeploy_publish_basic_authentication_enabled = true 
+    # zip_deploy_file                                = "path/to/your/deployment.zip"
+
+    # Optional: Uncomment to set Custom domain names for the app service
+    # custom_hostname_binding = ["example.com"]
 
     #Required: Change the name and resource group for the App Service Plan linked to the App Service
     asp = {
@@ -93,6 +104,12 @@ appServiceLinux = {
       #   }]
       # }]
 
+      # Optional: Uncomment to set CORS block
+      # cors = [{
+      #   allowed_origins     = ""
+      #   support_credentials = false
+      # }]
+
       # Optional: Uncomment to set one or multiple ip rules
       # ip_restriction = {
       #   "Name" = {
@@ -128,18 +145,9 @@ appServiceLinux = {
       #     }]
       #   }
       # }
-
-      # Optional: Uncomment to set CORS block
-      # cors = [{
-      #   allowed_origins     = ""
-      #   support_credentials = false
-      # }]
     }
 
-    # Optional: Uncomment to set Custom domain names for the app service
-    # custom_hostname_binding = {
-    #   "example.com" = {}
-    # }
+
 
     # Optional: Uncomment to set auth settings. All sub blocks are also optional and may be ommitted
     # auth_settings = [{
@@ -308,6 +316,14 @@ appServiceLinux = {
     #       keep_at_least_one_backup = true
     #       retention_period_days    = 30 
     #     }
+    #   }
+    # }
+
+    # Optional: Uncomment to set one or more connection string
+    # connection_string = {
+    #   "exampleString" = {
+    #     type = "Custom"
+    #     value = "thisisacustomstring"
     #   }
     # }
 

@@ -390,6 +390,15 @@ resource "azurerm_linux_web_app" "webapp" {
     }
   }
 
+  dynamic "connection_string" {
+    for_each = try(var.appServiceLinux.connection_string, {})
+    content {
+      name = connection_string.key
+      type = connection_string.value.type
+      value = connection_string.value.value
+    }
+  }
+
   dynamic "identity" {
     for_each = try(var.appServiceLinux.identity, null) != null ? [1] : []
     content {
@@ -401,8 +410,8 @@ resource "azurerm_linux_web_app" "webapp" {
   dynamic "logs" {
     for_each = try(var.appServiceLinux.logs, {})
     content {
-      detailed_error_messages = try(logs.value.detailed_error_messages, null)
-      failed_request_tracing  = try(logs.value.failed_request_tracing, null)
+      detailed_error_messages = try(logs.value.detailed_error_messages, true)
+      failed_request_tracing  = try(logs.value.failed_request_tracing, true)
 
       dynamic "application_logs" {
         for_each = try(logs.value.application_logs, {})
@@ -469,13 +478,13 @@ resource "azurerm_linux_web_app" "webapp" {
 }
 
 resource "azurerm_app_service_custom_hostname_binding" "hostname" {
-  for_each = try(var.appServiceLinux.custom_hostname_binding, {})
-  hostname = each.key
+  for_each = toset(try(var.appServiceLinux.custom_hostname_binding, []))
+  hostname = each.value
   app_service_name = azurerm_linux_web_app.webapp.name
   resource_group_name = local.resource_group_name
 
-  ssl_state = try(each.value.ssl_state, null)
-  thumbprint = try(each.value.thumbprint, null)
+  # ssl_state = try(each.value.ssl_state, null)
+  # thumbprint = try(each.value.thumbprint, null)
 }
 
 data "azurerm_service_plan" "asp" {
