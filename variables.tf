@@ -42,6 +42,12 @@ variable "subnets" {
   default = null
 }
 
+variable "asp" {
+  description = "Object containing a map of name and ID for the App Service Plan in the target subscription"
+  type = any
+  default = null
+}
+
 variable "appServiceLinux" {
   description = "Object containing all parameters for the Linux App Service"
   type = any

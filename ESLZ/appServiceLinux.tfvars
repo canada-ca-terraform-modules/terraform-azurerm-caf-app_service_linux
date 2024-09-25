@@ -1,9 +1,10 @@
 appServiceLinux = {
   test = {
-    resource_group                                 = "Project"
-    enabled                                        = true
-    https_only                                     = true
-    public_network_access_enabled                  = false
+    resource_group                = "Project"
+    asp                           = "name"
+    enabled                       = true
+    https_only                    = true
+    public_network_access_enabled = false
     # client_affinity_enabled                        = true
     # client_certificated_enabled                    = false
     # client_certificate_mode                        = "Required"
@@ -17,19 +18,13 @@ appServiceLinux = {
     # Optional: Uncomment to set Custom domain names for the app service
     # custom_hostname_binding = ["example.com"]
 
-    #Required: Change the name and resource group for the App Service Plan linked to the App Service
-    asp = {
-      name           = "test"
-      resource_group = "Project"
-    }
-
     # Required: The block can be empty but must be present
     site_config = {
       always_on           = true
-      default_documents   = ["index.html", "index.php"]
+      # default_documents   = ["index.html", "index.php"]
       http2_enabled       = true
       minimum_tls_version = "1.2"
-      ftps_state          = "Disabled"
+      # ftps_state          = "Disabled"
       # api_definition_url                            = "URL to your API definition"
       # api_management_api_id                         = "Your API Management API ID"
       # app_command_line                              = "Your command line to start the app"
