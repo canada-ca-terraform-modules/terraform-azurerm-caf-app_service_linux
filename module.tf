@@ -12,9 +12,9 @@ resource "azurerm_linux_web_app" "webapp" {
   enabled                                        = try(var.appServiceLinux.enabled, true)
   ftp_publish_basic_authentication_enabled       = try(var.appServiceLinux.ftp_publish_basic_authentication_enabled, false)
   https_only                                     = try(var.appServiceLinux.https_only, true)
-  public_network_access_enabled                  = try(var.appServiceLinux.public_network_access_enabled, true)
+  public_network_access_enabled                  = try(var.appServiceLinux.public_network_access_enabled, false)
   key_vault_reference_identity_id                = try(var.appServiceLinux.key_vault_reference_identity_id, null)
-  virtual_network_subnet_id                      = try(var.appServiceLinux.virtual_network_subnet_id, null)
+  virtual_network_subnet_id                      = local.subnet_id
   webdeploy_publish_basic_authentication_enabled = try(var.appServiceLinux.webdeploy_publish_basic_authentication_enabled, null)
   zip_deploy_file                                = try(var.appServiceLinux.zip_deploy_file, null)
 
@@ -43,7 +43,7 @@ resource "azurerm_linux_web_app" "webapp" {
     scm_ip_restriction_default_action             = try(var.appServiceLinux.site_config.scm_ip_restriction_default_action, "Allow")
     scm_minimum_tls_version                       = try(var.appServiceLinux.site_config.scm_minimum_tls_version, "1.2")
     use_32_bit_worker                             = try(var.appServiceLinux.site_config.use_32_bit_worker, true)
-    vnet_route_all_enabled                        = try(var.appServiceLinux.site_config.vnet_route_all_enabled, false)
+    vnet_route_all_enabled                        = try(var.appServiceLinux.site_config.vnet_route_all_enabled, true)
     websockets_enabled                            = try(var.appServiceLinux.site_config.websockets_enabled, false)
     worker_count                                  = try(var.appServiceLinux.site_config.worker_count, null)
 
@@ -481,5 +481,19 @@ resource "azurerm_app_service_custom_hostname_binding" "hostname" {
 
   # ssl_state = try(each.value.ssl_state, null)
   # thumbprint = try(each.value.thumbprint, null)
+}
+
+module "private_endpoint" {
+  source = "github.com/canada-ca-terraform-modules/terraform-azurerm-caf-private_endpoint.git?ref=v1.0.2"
+  for_each =  try(var.appServiceLinux.private_endpoint, {}) 
+
+  name = "${local.asv-name}-${each.key}"
+  location = var.location
+  resource_groups = var.resource_groups
+  subnets = var.subnets
+  private_connection_resource_id = azurerm_linux_web_app.webapp.id
+  private_endpoint = each.value
+  private_dns_zone_ids = var.private_dns_zone_ids
+  tags = var.tags
 }
 
