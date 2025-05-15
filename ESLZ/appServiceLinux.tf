@@ -14,5 +14,6 @@ module "appServiceLinux" {
   subnets = local.subnets
   appServiceLinux = each.value
   asp = local.asp_id
+  private_dns_zone_ids = local.Project-dns-zone
   tags = var.tags
 }

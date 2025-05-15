@@ -483,6 +483,16 @@ resource "azurerm_app_service_custom_hostname_binding" "hostname" {
   # thumbprint = try(each.value.thumbprint, null)
 }
 
+resource "azurerm_app_service_public_certificate" "internal-ca" {
+  count = try(var.appServiceLinux.inject_root_cert, false) ? 1 : 0
+  app_service_name = azurerm_linux_web_app.webapp.name
+  resource_group_name = local.resource_group_name
+  certificate_name = "GOC-GDC-ROOT-A"
+  certificate_location = "Unknown"
+  blob = data.http.cert[0].response_body_base64
+}
+
+
 module "private_endpoint" {
   source = "github.com/canada-ca-terraform-modules/terraform-azurerm-caf-private_endpoint.git?ref=v1.0.2"
   for_each =  try(var.appServiceLinux.private_endpoint, {}) 
