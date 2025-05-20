@@ -377,9 +377,9 @@ appServiceLinux = {
     # }]
 
     # Optional: Uncomment to set sticky settings
-    # sticky_settings = [{
+    # sticky_settings = {
     #   app_setting_names       = ["AppSetting1", "AppSetting2"]
     #   connection_string_names = ["ConnectionString1", "ConnectionString2"]
-    # }]
+    # }
   }
 }
