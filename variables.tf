@@ -53,3 +53,9 @@ variable "appServiceLinux" {
   type = any
   default = {}
 }
+
+variable "private_dns_zone_ids" {
+  description = "Object containing the private DNS zone IDs of the subscription. Used to configure private endpoints"
+  type = any
+  default = {}
+}
