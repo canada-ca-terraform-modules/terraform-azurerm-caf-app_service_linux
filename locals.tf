@@ -7,4 +7,6 @@ locals {
   # asp_rg = strcontains(var.appServiceLinux.asp.resource_group, "/resourceGroups/") ? regex("[^\\/]+$", var.appServiceLinux.asp.resource_group) : var.resource_groups[var.appServiceLinux.asp.resource_group].name
 
   app_settings = try(var.appServiceLinux.inject_root_cert, false) ? merge(try(var.appServiceLinux.app_settings, {}), {"WEBSITE_LOAD_ROOT_CERTIFICATES" = "8EBD38E4D2A40158C4CA179E791D239D7F520F0A"}) : try(var.appServiceLinux.app_settings, {})
+
+  zones = {for name, value in var.zones: value.name => value}
 }

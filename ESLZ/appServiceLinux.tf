@@ -15,5 +15,7 @@ module "appServiceLinux" {
   appServiceLinux = each.value
   asp = local.asp_id
   private_dns_zone_ids = local.Project-dns-zone
+  keyvault = local.Project-kv
+  zones = local.zones
   tags = var.tags
 }
