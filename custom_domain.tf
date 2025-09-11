@@ -9,6 +9,8 @@ resource "azurerm_dns_txt_record" "validation" {
   record {
     value = azurerm_linux_web_app.webapp.custom_domain_verification_id 
   }
+
+  tags = var.tags
 }
 
 locals {
@@ -30,6 +32,8 @@ resource "azurerm_app_service_certificate" "custom_cert" {
   location = var.location
 
   key_vault_secret_id = data.azurerm_key_vault_certificate.custom_cert[each.key].secret_id
+
+  tags = var.tags
 }
 
 resource "azurerm_app_service_custom_hostname_binding" "custom" {
