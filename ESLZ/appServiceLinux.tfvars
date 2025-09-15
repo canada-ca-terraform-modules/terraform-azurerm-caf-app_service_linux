@@ -10,13 +10,13 @@ appServiceLinux = {
     # Custom domain names for the app service
     # key is the name of the dns record (without the domain name)
     custom_domains = {
-      test => {
+      test = {
         # This example would be for FQDN test.project.c.ent.cloud-nuage.canada.ca
         zone = "project.c.ent.cloud-nuage.canada.ca"
 
         # no certificate will be bound to the name, so the default certificate (*.azurewebsites.net) will be used
       }
-      test1 => {
+      test1 = {
         # the name of the zone in the project-managed dns zones, for the creation of txt validation records
         zone = "project.c.ent.cloud-nuage.canada.ca"
 
