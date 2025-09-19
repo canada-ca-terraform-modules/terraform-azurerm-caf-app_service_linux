@@ -474,16 +474,6 @@ resource "azurerm_linux_web_app" "webapp" {
   }
 }
 
-resource "azurerm_app_service_custom_hostname_binding" "hostname" {
-  for_each            = toset(try(var.appServiceLinux.custom_hostname_binding, []))
-  hostname            = each.value
-  app_service_name    = azurerm_linux_web_app.webapp.name
-  resource_group_name = local.resource_group_name
-
-  # ssl_state = try(each.value.ssl_state, null)
-  # thumbprint = try(each.value.thumbprint, null)
-}
-
 resource "azurerm_app_service_public_certificate" "internal-ca" {
   count                = try(var.appServiceLinux.inject_root_cert, false) ? 1 : 0
   app_service_name     = azurerm_linux_web_app.webapp.name

@@ -49,9 +49,6 @@ appServiceLinux = {
     # webdeploy_publish_basic_authentication_enabled = true 
     # zip_deploy_file                                = "path/to/your/deployment.zip"
 
-    # Optional: Uncomment to set Custom domain names for the app service
-    # custom_hostname_binding = ["example.com"]
-
     # Optional: Uncomment and set any key value pairs
     # app_settings = {}
 
