@@ -15,6 +15,7 @@ resource "azurerm_linux_web_app" "webapp" {
   public_network_access_enabled                  = try(var.appServiceLinux.public_network_access_enabled, false)
   key_vault_reference_identity_id                = try(var.appServiceLinux.key_vault_reference_identity_id, null)
   virtual_network_subnet_id                      = local.subnet_id
+  vnet_image_pull_enabled                        = try(var.appServiceLinux.vnet_image_pull_enabled, false)
   webdeploy_publish_basic_authentication_enabled = try(var.appServiceLinux.webdeploy_publish_basic_authentication_enabled, null)
   zip_deploy_file                                = try(var.appServiceLinux.zip_deploy_file, null)
 
