@@ -466,10 +466,19 @@ resource "azurerm_linux_web_app" "webapp" {
   }
 
   dynamic "sticky_settings" {
-    for_each = try(var.appServiceLinux.inject_root_cert, false) ? {app_setting_names = ["WEBSITE_LOAD_ROOT_CERTIFICATES"]} : try(var.appServiceLinux.sticky_settings, {})
+    for_each = try(var.appServiceLinux.sticky_settings, null) != null || try(var.appServiceLinux.inject_root_cert, false) ? [
+      {
+        app_setting_names = (
+          try(var.appServiceLinux.inject_root_cert, false) 
+            ? concat(try(var.appServiceLinux.sticky_settings.app_setting_names, []), ["WEBSITE_LOAD_ROOT_CERTIFICATES"]) 
+            : try(var.appServiceLinux.sticky_settings.app_setting_names, null)
+        )
+        connection_string_names = try(var.appServiceLinux.sticky_settings.connection_string_names, null)
+      }] : []
+    
     content {
-      app_setting_names = try(var.appServiceLinux.inject_root_cert, false) ? concat(try(var.appServiceLinux.sticky_settings.app_setting_names, []), ["WEBSITE_LOAD_ROOT_CERTIFICATES"]) : try(var.appServiceLinux.app_setting_names, null)
-      connection_string_names = try(var.appServiceLinux.sticky_settings.connection_string_names, null)
+      app_setting_names = sticky_settings.value.app_setting_names
+      connection_string_names = sticky_settings.value.connection_string_names
     }
   }
 }
