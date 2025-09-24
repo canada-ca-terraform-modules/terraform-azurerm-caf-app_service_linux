@@ -59,3 +59,9 @@ variable "private_dns_zone_ids" {
   type = any
   default = {}
 }
+
+variable "zones" {
+  description = "(Optional) The project DNS zones, used to create and validate custom domain entries"
+  type = any
+  default = {}
+}

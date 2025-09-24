@@ -15,6 +15,7 @@ resource "azurerm_linux_web_app" "webapp" {
   public_network_access_enabled                  = try(var.appServiceLinux.public_network_access_enabled, false)
   key_vault_reference_identity_id                = try(var.appServiceLinux.key_vault_reference_identity_id, null)
   virtual_network_subnet_id                      = local.subnet_id
+  vnet_image_pull_enabled                        = try(var.appServiceLinux.vnet_image_pull_enabled, false)
   webdeploy_publish_basic_authentication_enabled = try(var.appServiceLinux.webdeploy_publish_basic_authentication_enabled, null)
   zip_deploy_file                                = try(var.appServiceLinux.zip_deploy_file, null)
 
@@ -465,22 +466,21 @@ resource "azurerm_linux_web_app" "webapp" {
   }
 
   dynamic "sticky_settings" {
-    for_each = try(var.appServiceLinux.inject_root_cert, false) ? {app_setting_names = ["WEBSITE_LOAD_ROOT_CERTIFICATES"]} : try(var.appServiceLinux.sticky_settings, {})
+    for_each = try(var.appServiceLinux.sticky_settings, null) != null || try(var.appServiceLinux.inject_root_cert, false) ? [
+      {
+        app_setting_names = (
+          try(var.appServiceLinux.inject_root_cert, false) 
+            ? concat(try(var.appServiceLinux.sticky_settings.app_setting_names, []), ["WEBSITE_LOAD_ROOT_CERTIFICATES"]) 
+            : try(var.appServiceLinux.sticky_settings.app_setting_names, null)
+        )
+        connection_string_names = try(var.appServiceLinux.sticky_settings.connection_string_names, null)
+      }] : []
+    
     content {
-      app_setting_names = try(var.appServiceLinux.inject_root_cert, false) ? concat(try(var.appServiceLinux.sticky_settings.app_setting_names, []), ["WEBSITE_LOAD_ROOT_CERTIFICATES"]) : try(var.appServiceLinux.app_setting_names, null)
-      connection_string_names = try(var.appServiceLinux.sticky_settings.connection_string_names, null)
+      app_setting_names = sticky_settings.value.app_setting_names
+      connection_string_names = sticky_settings.value.connection_string_names
     }
   }
-}
-
-resource "azurerm_app_service_custom_hostname_binding" "hostname" {
-  for_each            = toset(try(var.appServiceLinux.custom_hostname_binding, []))
-  hostname            = each.value
-  app_service_name    = azurerm_linux_web_app.webapp.name
-  resource_group_name = local.resource_group_name
-
-  # ssl_state = try(each.value.ssl_state, null)
-  # thumbprint = try(each.value.thumbprint, null)
 }
 
 resource "azurerm_app_service_public_certificate" "internal-ca" {

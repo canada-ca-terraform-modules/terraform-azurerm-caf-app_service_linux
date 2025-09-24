@@ -6,6 +6,39 @@ appServiceLinux = {
     https_only                    = true
     public_network_access_enabled = false
     inject_root_cert = false
+
+    # Custom domain names for the app service
+    # key is the name of the dns record (without the domain name)
+    custom_domains = {
+      test = {
+        # This example would be for FQDN test.project.c.ent.cloud-nuage.canada.ca
+        zone = "project.c.ent.cloud-nuage.canada.ca"
+
+        # no certificate will be bound to the name, so the default certificate (*.azurewebsites.net) will be used
+      }
+      test1 = {
+        # the name of the zone in the project-managed dns zones, for the creation of txt validation records
+        zone = "project.c.ent.cloud-nuage.canada.ca"
+
+        # name of the certificate in the project Key Vault that is valid for the custom FQDN
+        certificate_name = "project-c-ent-cloud-nuage-canada-ca-pfx"
+      }
+      external-dns = {
+        # this example would be for FQDN external-dns.some-department.gc.ca
+
+        # the name of the zone in the project-managed dns zones, for the creation of txt validation records
+        zone = "project.c.ent.cloud-nuage.canada.ca"
+
+        # optional, the domain name, in the case the custom domain is not project-managed
+        # The CNAME record in the other zone must already be created and pointing to our managed zone
+        # like asuid.external-dns CNAME asuid.external-dns.project.c.ent.cloud-nuage.canada.ca
+        domain_name = "some-department.gc.ca"
+
+        # name of the certificate that is valid for the custom FQDN
+        certificate_name = "external-some-department-gc-ca-pfx"
+      }
+    }
+
     # client_affinity_enabled                        = true
     # client_certificated_enabled                    = false
     # client_certificate_mode                        = "Required"
@@ -15,9 +48,6 @@ appServiceLinux = {
     # virtual_network_subnet_id                      = "Your VNet Subnet ID"
     # webdeploy_publish_basic_authentication_enabled = true 
     # zip_deploy_file                                = "path/to/your/deployment.zip"
-
-    # Optional: Uncomment to set Custom domain names for the app service
-    # custom_hostname_binding = ["example.com"]
 
     # Optional: Uncomment and set any key value pairs
     # app_settings = {}
