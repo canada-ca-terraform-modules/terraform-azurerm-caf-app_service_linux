@@ -32,7 +32,7 @@ resource "azurerm_linux_web_app" "webapp" {
     default_documents                             = try(var.appServiceLinux.site_config.default_documents, null)
     ftps_state                                    = try(var.appServiceLinux.site_config.ftps_state, "Disabled")
     health_check_path                             = try(var.appServiceLinux.site_config.health_check_path, null)
-    health_check_eviction_time_in_min             = try(var.appServiceLinux.health_check_eviction_time_in_min, null)
+    health_check_eviction_time_in_min             = try(var.appServiceLinux.site_config.health_check_eviction_time_in_min, null)
     http2_enabled                                 = try(var.appServiceLinux.site_config.http2_enabled, true)
     ip_restriction_default_action                 = try(var.appServiceLinux.site_config.ip_restriction_default_action, "Allow")
     load_balancing_mode                           = try(var.appServiceLinux.site_config.load_balancing_mode, "LeastRequests")
