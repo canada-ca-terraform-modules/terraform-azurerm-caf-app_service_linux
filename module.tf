@@ -63,7 +63,6 @@ resource "azurerm_linux_web_app" "webapp" {
         node_version             = try(var.appServiceLinux.site_config.application_stack.node_version, null)
         php_version              = try(var.appServiceLinux.site_config.application_stack.php_version, null)
         python_version           = try(var.appServiceLinux.site_config.application_stack.python_version, null)
-        ruby_version             = try(var.appServiceLinux.site_config.application_stack.ruby_version, null)
       }
     }
 
@@ -494,7 +493,7 @@ resource "azurerm_app_service_public_certificate" "internal-ca" {
 
 
 module "private_endpoint" {
-  source   = "github.com/canada-ca-terraform-modules/terraform-azurerm-caf-private_endpoint.git?ref=v1.0.2"
+  source   = "github.com/canada-ca-terraform-modules/terraform-azurerm-caf-private_endpoint.git?ref=v1.2.0"
   for_each = try(var.appServiceLinux.private_endpoint, {})
 
   name                           = "${local.asv-name}-${each.key}"

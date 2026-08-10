@@ -103,7 +103,6 @@ appServiceLinux = {
       #   node_version             = "20-lts"
       #   php_version              = "8.3"
       #   python_version           = "3.9"
-      #   ruby_version             = "2.7"
       # }
 
       # Optional: Uncomment block to set auto heal settings
