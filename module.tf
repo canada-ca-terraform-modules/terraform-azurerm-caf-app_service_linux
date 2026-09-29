@@ -19,7 +19,13 @@ resource "azurerm_linux_web_app" "webapp" {
   zip_deploy_file                                = try(var.appServiceLinux.zip_deploy_file, null)
 
   tags = merge(var.tags, try(var.appServiceLinux.tags, {}))
-
+  
+lifecycle {
+  ignore_changes = [
+    site_config[0].app_command_line,
+    app_settings
+  ]
+}
 
   site_config {
     always_on                                     = try(var.appServiceLinux.site_config.always_on, true)
